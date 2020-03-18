@@ -18,4 +18,12 @@ router.get("/", restrict(), async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  try {
+    res.json(await Users.find(id));
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
