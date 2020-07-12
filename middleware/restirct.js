@@ -2,17 +2,16 @@ const bcrypt = require("bcryptjs");
 const Users = require("../users/users-model");
 const jwt = require("jsonwebtoken");
 
-function restrict() {
+const rules = ["username", "password"];
+
+function restrict(rule) {
   const authError = {
     message: "Invalid credentials",
   };
 
   return async (req, res, next) => {
     try {
-      const { username, password } = req.headers;
-      if (!username || !password) {
-        return res.status(401).json(authError);
-      }
+      const token = req.headers.authorization.split("")[0];
 
       const user = await Users.findBy({ username }).first();
       // user exists
