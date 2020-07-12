@@ -1,9 +1,10 @@
 const bcrypt = require("bcryptjs");
 const Users = require("../users/users-model");
+const jwt = require("jsonwebtoken");
 
 function restrict() {
   const authError = {
-    message: "Invalid credentials"
+    message: "Invalid credentials",
   };
 
   return async (req, res, next) => {
