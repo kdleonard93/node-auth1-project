@@ -1,34 +1,30 @@
-const bcrypt = require("bcryptjs");
-const db = require("../database/config");
+const db = require('../data/connection');
 
-async function add(user) {
-  // hash the password with a time complexity of 13
-  user.password = await bcrypt.hash(user.password, 13);
-
-  const [id] = await db("users").insert(user);
-  return findById(id);
+module.exports = {
+    add,
+    find,
+    findBy,
+    findById,
 }
 
 function find() {
-  return db("users").select("id", "username");
+    return db("users").orderBy("id");
 }
 
 function findBy(filter) {
-  return db("users")
-    .select("id", "username", "password")
-    .where(filter);
-}
-
-function findById(id) {
-  return db("users")
-    .select("id", "username")
-    .where({ id })
-    .first();
-}
-
-module.exports = {
-  add,
-  find,
-  findBy,
-  findById
-};
+    return db("users").where(filter).orderBy("id");
+  }
+  
+  async function add(user) {
+    try {
+      const [id] = await db("users").insert(user, "id");
+  
+      return findById(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  function findById(id) {
+    return db("users").where({ id }).first();
+  }

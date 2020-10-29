@@ -1,29 +1,14 @@
-const express = require("express");
-const Users = require("./users-model");
-const restrict = require("../middleware/restrict");
+const router = require('express').Router();
+const restricted = require('../auth/restricted-middleware')
 
-const router = express.Router();
+const Users = require('./user-model');
 
-router.post("/", async (req, res, next) => {
-  try {
-    res.json(await Users.add({ id }));
-  }
-});
-
-router.get("/", restrict(), async (req, res, next) => {
-  try {
-    res.json(await Users.find());
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/:id", async (req, res, next) => {
-  try {
-    res.json(await Users.find(id));
-  } catch (err) {
-    next(err);
-  }
+router.get("/", restricted, (req, res) => {
+    Users.find()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(err => res.send(err));
 });
 
 module.exports = router;
